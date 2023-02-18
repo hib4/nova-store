@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/hibakun/nova-store/handlers"
+	"github.com/hibakun/nova-store/middleware"
 )
 
 func V1(app *fiber.App) {
@@ -11,4 +12,5 @@ func V1(app *fiber.App) {
 
 	v1.Post("/login", handlers.Login)
 	v1.Post("/register", handlers.CreateUser)
+	v1.Get("/logout", middleware.Protected, handlers.Logout)
 }

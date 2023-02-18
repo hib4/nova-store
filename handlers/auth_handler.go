@@ -105,3 +105,16 @@ func Login(c *fiber.Ctx) error {
 		"token":   token,
 	})
 }
+
+func Logout(c *fiber.Ctx) error {
+	c.Cookie(&fiber.Cookie{
+		Name:     "USER_SESSION",
+		Expires:  time.Now().Add(-(time.Hour * 2)),
+		SameSite: "lax",
+	})
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "success logout",
+	})
+}
