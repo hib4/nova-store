@@ -9,5 +9,6 @@ func V1(app *fiber.App) {
 	api := app.Group("/api")
 	v1 := api.Group("/v1")
 
+	v1.Post("/login", handlers.Login)
 	v1.Post("/register", handlers.CreateUser)
 }
