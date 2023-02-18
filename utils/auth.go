@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/hibakun/nova-store/database"
 	"github.com/hibakun/nova-store/models"
+	"net/mail"
 )
 
 func GetUserByEmail(email string) (*models.User, bool) {
@@ -19,4 +20,9 @@ func GetUserByPhoneNumber(number string) (*models.User, bool) {
 		return nil, false
 	}
 	return &user, true
+}
+
+func ValidEmail(email string) bool {
+	_, err := mail.ParseAddress(email)
+	return err == nil
 }
