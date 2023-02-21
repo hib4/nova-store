@@ -8,7 +8,6 @@ import (
 	"github.com/hibakun/nova-store/database"
 	"github.com/hibakun/nova-store/models"
 	"github.com/hibakun/nova-store/utils"
-	"net/http"
 	"strconv"
 )
 
@@ -24,7 +23,7 @@ func CreateGame(c *fiber.Ctx) error {
 
 	validate := validator.New()
 	if err := validate.Struct(game); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status":  "error",
 			"message": err.Error(),
 		})
