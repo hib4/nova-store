@@ -117,3 +117,43 @@ func Logout(c *fiber.Ctx) error {
 		"message": "success logout",
 	})
 }
+
+func Validate(c *fiber.Ctx) error {
+	cookie := c.Cookies("USER_SESSION")
+
+	claims, err := utils.DecodeJWT(cookie)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"status":  "error",
+			"message": "unauthorized",
+		})
+	}
+
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"id":       claims["id"],
+		"identity": claims["identity"],
+		"exp":      time.Now().Add(time.Hour * 24 * 7).Unix(),
+	})
+
+	token, errToken := t.SignedString([]byte(config.Config("SECRET")))
+	if errToken != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"status":  "error",
+			"message": "failed to create token",
+		})
+	}
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "USER_SESSION",
+		Value:    token,
+		MaxAge:   3600 * 24 * 7,
+		Expires:  time.Now().Add(time.Hour * 24 * 7),
+		SameSite: "lax",
+	})
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "success validation",
+		"token":   token,
+	})
+}
