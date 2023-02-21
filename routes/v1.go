@@ -16,4 +16,11 @@ func V1(app *fiber.App) {
 
 	game := v1.Group("/game")
 	game.Post("/create", middleware.Protected, handlers.CreateGame)
+	game.Get("/", handlers.GetAllGames)
+	game.Get("/:id", handlers.GetGameById)
+
+	genre := v1.Group("/genre", middleware.Protected)
+	genre.Post("/create", handlers.CreateGenre)
+	genre.Get("/", handlers.GetAllGenres)
+	genre.Get("/:id", handlers.GetGenreById)
 }
