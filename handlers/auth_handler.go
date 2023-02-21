@@ -7,7 +7,6 @@ import (
 	"github.com/hibakun/nova-store/config"
 	"github.com/hibakun/nova-store/models"
 	"github.com/hibakun/nova-store/utils"
-	"net/http"
 	"time"
 )
 
@@ -33,7 +32,7 @@ func Login(c *fiber.Ctx) error {
 
 	validate := validator.New()
 	if err := validate.Struct(input); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "error",
 			"error":   err.Error(),
 		})

@@ -5,7 +5,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/hibakun/nova-store/database"
 	"github.com/hibakun/nova-store/models"
-	"net/http"
 )
 
 func CreateGenre(c *fiber.Ctx) error {
@@ -21,7 +20,7 @@ func CreateGenre(c *fiber.Ctx) error {
 
 	validate := validator.New()
 	if err := validate.Struct(genre); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status":  "error",
 			"message": err.Error(),
 		})
