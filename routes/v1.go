@@ -24,4 +24,7 @@ func V1(app *fiber.App) {
 	genre.Post("/create", handlers.CreateGenre)
 	genre.Get("/", handlers.GetAllGenres)
 	genre.Get("/:id", handlers.GetGenreById)
+
+	item := v1.Group("/item", middleware.Protected)
+	item.Post("/create", handlers.CreateItem)
 }

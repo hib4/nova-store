@@ -9,6 +9,7 @@ func Sync() {
 		&models.User{},
 		&models.Game{},
 		&models.Genre{},
+		&models.Item{},
 	)
 	if err != nil {
 		panic("failed to migrate database")
