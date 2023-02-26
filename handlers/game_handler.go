@@ -87,7 +87,7 @@ func CreateGame(c *fiber.Ctx) error {
 func GetAllGames(c *fiber.Ctx) error {
 	var games []models.GameResponse
 
-	database.DB.Preload("Genres").Find(&games)
+	database.DB.Preload("Genres").Preload("Items").Find(&games)
 
 	return c.JSON(fiber.Map{
 		"status":  "success",
@@ -100,7 +100,7 @@ func GetGameById(c *fiber.Ctx) error {
 	var game models.GameResponse
 
 	id := c.Params("id")
-	if err := database.DB.Preload("Genres").First(&game, "id = ?", id).Error; err != nil {
+	if err := database.DB.Preload("Genres").Preload("Items").First(&game, "id = ?", id).Error; err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"status":  "error",
 			"message": "game not found",

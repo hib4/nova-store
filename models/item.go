@@ -7,3 +7,14 @@ type Item struct {
 	Price  int    `json:"price" form:"price" gorm:"not null" validate:"required"`
 	Image  string `json:"image" form:"image" gorm:"not null"`
 }
+
+type ItemResponse struct {
+	GameID uint   `json:"-"`
+	Name   string `json:"name"`
+	Price  int    `json:"price"`
+	Image  string `json:"image"`
+}
+
+func (ItemResponse) TableName() string {
+	return "items"
+}
