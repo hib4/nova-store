@@ -11,6 +11,15 @@ type GameResponse struct {
 	Items     []ItemResponse  `json:"items" gorm:"foreignKey:GameID"`
 }
 
+type GameNameResponse struct {
+	ID   uint   `json:"id"`
+	Name string `json:"name"`
+}
+
 func (GameResponse) TableName() string {
+	return "games"
+}
+
+func (GameNameResponse) TableName() string {
 	return "games"
 }

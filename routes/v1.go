@@ -27,4 +27,6 @@ func V1(app *fiber.App) {
 
 	item := v1.Group("/item", middleware.Protected)
 	item.Post("/create", handlers.CreateItem)
+	item.Get("/:id", handlers.GetItemById)
+	item.Get("/game/:id", handlers.GetItemsByGameId)
 }

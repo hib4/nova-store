@@ -7,6 +7,7 @@ import (
 	"github.com/golang-module/carbon/v2"
 	"github.com/hibakun/nova-store/database"
 	"github.com/hibakun/nova-store/models/model"
+	"github.com/hibakun/nova-store/models/response"
 	"github.com/hibakun/nova-store/utils"
 	"strconv"
 )
@@ -76,5 +77,41 @@ func CreateItem(c *fiber.Ctx) error {
 		"status":  "success",
 		"message": "success create item",
 		"data":    item,
+	})
+}
+
+func GetItemById(c *fiber.Ctx) error {
+	var item response.ItemGameResponse
+
+	id := c.Params("id")
+	if err := database.DB.Preload("Game").First(&item, "id = ?", id).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "item not found",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "item found",
+		"data":    item,
+	})
+}
+
+func GetItemsByGameId(c *fiber.Ctx) error {
+	var items []response.ItemGameResponse
+
+	id := c.Params("id")
+	if err := database.DB.Preload("Game").Find(&items, "game_id= ?", id).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "items not found",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "items found",
+		"data":    items,
 	})
 }
