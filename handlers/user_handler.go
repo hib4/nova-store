@@ -6,14 +6,14 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/hibakun/nova-store/config"
 	"github.com/hibakun/nova-store/database"
-	"github.com/hibakun/nova-store/models"
+	"github.com/hibakun/nova-store/models/model"
 	"github.com/hibakun/nova-store/utils"
 	"net/http"
 	"time"
 )
 
 func CreateUser(c *fiber.Ctx) error {
-	user := new(models.User)
+	user := new(model.User)
 
 	if err := c.BodyParser(user); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
