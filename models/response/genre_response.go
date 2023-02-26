@@ -1,9 +1,4 @@
-package models
-
-type Genre struct {
-	Model
-	Name string `json:"name" form:"name" gorm:"not null" validate:"required"`
-}
+package response
 
 type GenreResponse struct {
 	ID   uint   `json:"id"`

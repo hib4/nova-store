@@ -6,13 +6,14 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-module/carbon/v2"
 	"github.com/hibakun/nova-store/database"
-	"github.com/hibakun/nova-store/models"
+	"github.com/hibakun/nova-store/models/model"
+	"github.com/hibakun/nova-store/models/response"
 	"github.com/hibakun/nova-store/utils"
 	"strconv"
 )
 
 func CreateGame(c *fiber.Ctx) error {
-	game := new(models.Game)
+	game := new(model.Game)
 	if err := c.BodyParser(game); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
@@ -57,7 +58,7 @@ func CreateGame(c *fiber.Ctx) error {
 
 	if len(game.GenreID) > 0 {
 		for _, genreID := range game.GenreID {
-			gameGenre := new(models.GameGenre)
+			gameGenre := new(model.GameGenre)
 			gameGenre.GameID = game.ID
 			gameGenre.GenreID = genreID
 			if err := database.DB.Create(&gameGenre).Error; err != nil {
@@ -85,7 +86,7 @@ func CreateGame(c *fiber.Ctx) error {
 }
 
 func GetAllGames(c *fiber.Ctx) error {
-	var games []models.GameResponse
+	var games []response.GameResponse
 
 	database.DB.Preload("Genres").Preload("Items").Find(&games)
 
@@ -97,7 +98,7 @@ func GetAllGames(c *fiber.Ctx) error {
 }
 
 func GetGameById(c *fiber.Ctx) error {
-	var game models.GameResponse
+	var game response.GameResponse
 
 	id := c.Params("id")
 	if err := database.DB.Preload("Genres").Preload("Items").First(&game, "id = ?", id).Error; err != nil {

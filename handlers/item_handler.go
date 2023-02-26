@@ -6,13 +6,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-module/carbon/v2"
 	"github.com/hibakun/nova-store/database"
-	"github.com/hibakun/nova-store/models"
+	"github.com/hibakun/nova-store/models/model"
 	"github.com/hibakun/nova-store/utils"
 	"strconv"
 )
 
 func CreateItem(c *fiber.Ctx) error {
-	item := new(models.Item)
+	item := new(model.Item)
 	if err := c.BodyParser(item); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
@@ -29,7 +29,7 @@ func CreateItem(c *fiber.Ctx) error {
 		})
 	}
 
-	var gameID models.User
+	var gameID model.User
 	if err := database.DB.Where("id = ?", item.GameID).Find(&gameID); err != nil {
 		if err.RowsAffected < 1 {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{

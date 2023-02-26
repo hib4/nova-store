@@ -4,11 +4,12 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/hibakun/nova-store/database"
-	"github.com/hibakun/nova-store/models"
+	"github.com/hibakun/nova-store/models/model"
+	"github.com/hibakun/nova-store/models/response"
 )
 
 func CreateGenre(c *fiber.Ctx) error {
-	genre := new(models.Genre)
+	genre := new(model.Genre)
 
 	if err := c.BodyParser(genre); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -41,7 +42,7 @@ func CreateGenre(c *fiber.Ctx) error {
 }
 
 func GetAllGenres(c *fiber.Ctx) error {
-	var genres []models.GenreResponse
+	var genres []response.GenreResponse
 
 	database.DB.Find(&genres)
 
@@ -53,7 +54,7 @@ func GetAllGenres(c *fiber.Ctx) error {
 }
 
 func GetGenreById(c *fiber.Ctx) error {
-	var genre models.GenreResponse
+	var genre response.GenreResponse
 
 	id := c.Params("id")
 	if err := database.DB.First(&genre, "id = ?", id).Error; err != nil {
