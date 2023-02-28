@@ -29,4 +29,9 @@ func V1(app *fiber.App) {
 	item.Post("/create", handlers.CreateItem)
 	item.Get("/:id", handlers.GetItemById)
 	item.Get("/game/:id", handlers.GetItemsByGameId)
+
+	payment := v1.Group("/payment")
+	payment.Post("/create", middleware.Protected, handlers.CreatePayment)
+	payment.Get("/", handlers.GetAllPayments)
+	payment.Get("/:id", handlers.GetPaymentById)
 }
