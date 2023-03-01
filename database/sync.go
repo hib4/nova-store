@@ -11,6 +11,7 @@ func Sync() {
 		&model.Genre{},
 		&model.Item{},
 		&model.Payment{},
+		&model.Transaction{},
 	)
 	if err != nil {
 		panic("failed to migrate database")
