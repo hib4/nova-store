@@ -41,7 +41,7 @@ func CreatePayment(c *fiber.Ctx) error {
 }
 
 func GetAllPayments(c *fiber.Ctx) error {
-	var payments []response.Payment
+	var payments []response.PaymentResponse
 
 	database.DB.Find(&payments)
 
@@ -53,7 +53,7 @@ func GetAllPayments(c *fiber.Ctx) error {
 }
 
 func GetPaymentById(c *fiber.Ctx) error {
-	var payment response.Payment
+	var payment response.PaymentResponse
 
 	id := c.Params("id")
 	if err := database.DB.First(&payment, "id = ?", id).Error; err != nil {

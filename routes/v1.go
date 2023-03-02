@@ -34,4 +34,9 @@ func V1(app *fiber.App) {
 	payment.Post("/create", middleware.Protected, handlers.CreatePayment)
 	payment.Get("/", handlers.GetAllPayments)
 	payment.Get("/:id", handlers.GetPaymentById)
+
+	transaction := v1.Group("/transaction")
+	transaction.Post("/create", middleware.Protected, handlers.CreateTransaction)
+	transaction.Get("/all", handlers.GetAllTransactions)
+	transaction.Get("/:id", handlers.GetTransactionByUuid)
 }

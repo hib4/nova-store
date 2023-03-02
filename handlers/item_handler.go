@@ -102,7 +102,7 @@ func GetItemsByGameId(c *fiber.Ctx) error {
 	var items []response.ItemGameResponse
 
 	id := c.Params("id")
-	if err := database.DB.Preload("Game").Find(&items, "game_id= ?", id).Error; err != nil {
+	if err := database.DB.Preload("Game").Find(&items, "game_id = ?", id).Error; err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"status":  "error",
 			"message": "items not found",
