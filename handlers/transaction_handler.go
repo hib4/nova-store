@@ -107,3 +107,21 @@ func GetTransactionByUuid(c *fiber.Ctx) error {
 		"data":    transaction,
 	})
 }
+
+func GetTransactionByUserId(c *fiber.Ctx) error {
+	var transactions []response.TransactionResponse
+
+	id := c.Locals("id")
+	if err := database.DB.Preload("User").Preload("Game").Preload("Item").Preload("Payment").Find(&transactions, "user_id = ?", id).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "transaction not found",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "transactions found",
+		"data":    transactions,
+	})
+}

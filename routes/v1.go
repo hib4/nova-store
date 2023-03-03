@@ -38,5 +38,6 @@ func V1(app *fiber.App) {
 	transaction := v1.Group("/transaction")
 	transaction.Post("/create", middleware.Protected, handlers.CreateTransaction)
 	transaction.Get("/all", handlers.GetAllTransactions)
+	transaction.Get("/user", middleware.Protected, handlers.GetTransactionByUserId)
 	transaction.Get("/:id", handlers.GetTransactionByUuid)
 }
