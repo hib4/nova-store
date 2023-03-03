@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/hibakun/nova-store/config"
-	"github.com/hibakun/nova-store/models"
+	"github.com/hibakun/nova-store/models/model"
 	"github.com/hibakun/nova-store/utils"
 	"time"
 )
@@ -40,7 +40,7 @@ func Login(c *fiber.Ctx) error {
 
 	identify := input.Identify
 	password := input.Password
-	email, phoneNumber, con := new(models.User), new(models.User), *new(bool)
+	email, phoneNumber, con := new(model.User), new(model.User), *new(bool)
 	var user UserData
 
 	if utils.ValidEmail(identify) {

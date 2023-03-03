@@ -8,10 +8,9 @@ import (
 	"github.com/hibakun/nova-store/models/response"
 )
 
-func CreateGenre(c *fiber.Ctx) error {
-	genre := new(model.Genre)
-
-	if err := c.BodyParser(genre); err != nil {
+func CreatePayment(c *fiber.Ctx) error {
+	payment := new(model.Payment)
+	if err := c.BodyParser(payment); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
 			"message": "check your input",
@@ -20,53 +19,53 @@ func CreateGenre(c *fiber.Ctx) error {
 	}
 
 	validate := validator.New()
-	if err := validate.Struct(genre); err != nil {
+	if err := validate.Struct(payment); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status":  "error",
 			"message": err.Error(),
 		})
 	}
 
-	if err := database.DB.Create(&genre).Error; err != nil {
+	if err := database.DB.Create(&payment).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
-			"message": "failed to create game",
+			"message": "failed to create payment",
 		})
 	}
 
 	return c.JSON(fiber.Map{
 		"status":  "success",
-		"message": "success create genre",
-		"data":    genre,
+		"message": "success create payment",
+		"data":    payment,
 	})
 }
 
-func GetAllGenres(c *fiber.Ctx) error {
-	var genres []response.GenreResponse
+func GetAllPayments(c *fiber.Ctx) error {
+	var payments []response.PaymentResponse
 
-	database.DB.Find(&genres)
+	database.DB.Find(&payments)
 
 	return c.JSON(fiber.Map{
 		"status":  "success",
-		"message": "genres found",
-		"data":    genres,
+		"message": "payments found",
+		"data":    payments,
 	})
 }
 
-func GetGenreById(c *fiber.Ctx) error {
-	var genre response.GenreResponse
+func GetPaymentById(c *fiber.Ctx) error {
+	var payment response.PaymentResponse
 
 	id := c.Params("id")
-	if err := database.DB.First(&genre, "id = ?", id).Error; err != nil {
+	if err := database.DB.First(&payment, "id = ?", id).Error; err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"status":  "error",
-			"message": "game not found",
+			"message": "payment not found",
 		})
 	}
 
 	return c.JSON(fiber.Map{
 		"status":  "success",
-		"message": "genre found",
-		"data":    genre,
+		"message": "payment found",
+		"data":    payment,
 	})
 }

@@ -24,4 +24,20 @@ func V1(app *fiber.App) {
 	genre.Post("/create", handlers.CreateGenre)
 	genre.Get("/", handlers.GetAllGenres)
 	genre.Get("/:id", handlers.GetGenreById)
+
+	item := v1.Group("/item", middleware.Protected)
+	item.Post("/create", handlers.CreateItem)
+	item.Get("/:id", handlers.GetItemById)
+	item.Get("/game/:id", handlers.GetItemsByGameId)
+
+	payment := v1.Group("/payment")
+	payment.Post("/create", middleware.Protected, handlers.CreatePayment)
+	payment.Get("/", handlers.GetAllPayments)
+	payment.Get("/:id", handlers.GetPaymentById)
+
+	transaction := v1.Group("/transaction")
+	transaction.Post("/create", middleware.Protected, handlers.CreateTransaction)
+	transaction.Get("/all", handlers.GetAllTransactions)
+	transaction.Get("/user", middleware.Protected, handlers.GetTransactionByUserId)
+	transaction.Get("/:id", handlers.GetTransactionByUuid)
 }

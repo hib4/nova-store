@@ -1,14 +1,17 @@
 package database
 
 import (
-	"github.com/hibakun/nova-store/models"
+	"github.com/hibakun/nova-store/models/model"
 )
 
 func Sync() {
 	err := DB.AutoMigrate(
-		&models.User{},
-		&models.Game{},
-		&models.Genre{},
+		&model.User{},
+		&model.Game{},
+		&model.Genre{},
+		&model.Item{},
+		&model.Payment{},
+		&model.Transaction{},
 	)
 	if err != nil {
 		panic("failed to migrate database")

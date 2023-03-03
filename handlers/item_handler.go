@@ -12,9 +12,9 @@ import (
 	"strconv"
 )
 
-func CreateGame(c *fiber.Ctx) error {
-	game := new(model.Game)
-	if err := c.BodyParser(game); err != nil {
+func CreateItem(c *fiber.Ctx) error {
+	item := new(model.Item)
+	if err := c.BodyParser(item); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
 			"message": "check your input",
@@ -23,11 +23,21 @@ func CreateGame(c *fiber.Ctx) error {
 	}
 
 	validate := validator.New()
-	if err := validate.Struct(game); err != nil {
+	if err := validate.Struct(item); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"status":  "error",
 			"message": err.Error(),
 		})
+	}
+
+	var gameID model.User
+	if err := database.DB.Where("id = ?", item.GameID).Find(&gameID); err != nil {
+		if err.RowsAffected < 1 {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"status":  "error",
+				"message": "game id not found",
+			})
+		}
 	}
 
 	file, errFile := c.FormFile("image")
@@ -47,28 +57,13 @@ func CreateGame(c *fiber.Ctx) error {
 
 	fileName := strconv.FormatInt(carbon.Now().Timestamp(), 10) + file.Filename
 
-	game.Image = fileName
+	item.Image = fileName
 
-	if err := database.DB.Create(&game).Error; err != nil {
+	if err := database.DB.Create(&item).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",
-			"message": "failed to create game",
+			"message": "failed to create item",
 		})
-	}
-
-	if len(game.GenreID) > 0 {
-		for _, genreID := range game.GenreID {
-			gameGenre := new(model.GameGenre)
-			gameGenre.GameID = game.ID
-			gameGenre.GenreID = genreID
-			if err := database.DB.Create(&gameGenre).Error; err != nil {
-				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-					"status":  "error",
-					"message": "failed to create game genres",
-					"error":   err.Error(),
-				})
-			}
-		}
 	}
 
 	if err := c.SaveFile(file, fmt.Sprintf("./public/images/%s", fileName)); err != nil {
@@ -80,37 +75,43 @@ func CreateGame(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"status":  "success",
-		"message": "success create game",
-		"data":    game,
+		"message": "success create item",
+		"data":    item,
 	})
 }
 
-func GetAllGames(c *fiber.Ctx) error {
-	var games []response.GameResponse
-
-	database.DB.Preload("Genres").Preload("Items").Find(&games)
-
-	return c.JSON(fiber.Map{
-		"status":  "success",
-		"message": "games found",
-		"data":    games,
-	})
-}
-
-func GetGameById(c *fiber.Ctx) error {
-	var game response.GameResponse
+func GetItemById(c *fiber.Ctx) error {
+	var item response.ItemGameResponse
 
 	id := c.Params("id")
-	if err := database.DB.Preload("Genres").Preload("Items").First(&game, "id = ?", id).Error; err != nil {
+	if err := database.DB.Preload("Game").First(&item, "id = ?", id).Error; err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"status":  "error",
-			"message": "game not found",
+			"message": "item not found",
 		})
 	}
 
 	return c.JSON(fiber.Map{
 		"status":  "success",
-		"message": "game found",
-		"data":    game,
+		"message": "item found",
+		"data":    item,
+	})
+}
+
+func GetItemsByGameId(c *fiber.Ctx) error {
+	var items []response.ItemGameResponse
+
+	id := c.Params("id")
+	if err := database.DB.Preload("Game").Find(&items, "game_id = ?", id).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "items not found",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "items found",
+		"data":    items,
 	})
 }
