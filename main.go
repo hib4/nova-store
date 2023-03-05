@@ -19,5 +19,5 @@ func main() {
 
 	routes.V1(app)
 
-	log.Fatal(app.Listen(":" + config.Config("PORT")))
+	log.Fatal(app.Listen("0.0.0.0:" + config.Config("PORT")))
 }
