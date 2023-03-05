@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/hibakun/nova-store/config"
 	"github.com/hibakun/nova-store/database"
 	"github.com/hibakun/nova-store/routes"
@@ -15,7 +16,7 @@ func init() {
 
 func main() {
 	app := fiber.New()
-	app.Use(cors.New())
+	app.Use(cors.New(), logger.New())
 
 	routes.V1(app)
 
