@@ -55,7 +55,7 @@ func CreateUser(c *fiber.Ctx) error {
 	}
 
 	user.Password = hash
-	user.Avatar = "avatar.jpg"
+	user.Avatar = "avatar.png"
 
 	if err := database.DB.Create(&user).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
