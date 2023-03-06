@@ -5,6 +5,7 @@ type UserResponse struct {
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
+	Avatar      string `json:"avatar"`
 }
 
 func (UserResponse) TableName() string {

@@ -20,6 +20,27 @@ type TransactionResponse struct {
 	PhoneNumber string           `json:"phone_number"`
 }
 
+type TransactionUserResponse struct {
+	models.Model
+	UUID        string           `json:"uuid"`
+	UserID      uint             `json:"-"`
+	GameID      uint             `json:"-"`
+	Game        GameNameResponse `json:"game"`
+	ItemID      uint             `json:"-"`
+	Item        ItemResponse     `json:"item"`
+	PlayerID    string           `json:"player_id"`
+	ZoneID      string           `json:"zone_id"`
+	Amount      int              `json:"amount"`
+	Total       int              `json:"total"`
+	PaymentID   uint             `json:"-"`
+	Payment     PaymentResponse  `json:"payment"`
+	PhoneNumber string           `json:"phone_number"`
+}
+
 func (TransactionResponse) TableName() string {
+	return "transactions"
+}
+
+func (TransactionUserResponse) TableName() string {
 	return "transactions"
 }
