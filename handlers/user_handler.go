@@ -7,6 +7,7 @@ import (
 	"github.com/hibakun/nova-store/config"
 	"github.com/hibakun/nova-store/database"
 	"github.com/hibakun/nova-store/models/model"
+	"github.com/hibakun/nova-store/models/response"
 	"github.com/hibakun/nova-store/utils"
 	"net/http"
 	"time"
@@ -92,5 +93,41 @@ func CreateUser(c *fiber.Ctx) error {
 		"message": "user created",
 		"data":    user,
 		"token":   token,
+	})
+}
+
+func GetUser(c *fiber.Ctx) error {
+	var user response.UserResponse
+
+	id := c.Locals("id")
+	if err := database.DB.First(&user, "id = ?", id).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "user not found",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "user found",
+		"data":    user,
+	})
+}
+
+func GetUserTransactions(c *fiber.Ctx) error {
+	var transactions []response.TransactionUserResponse
+
+	id := c.Locals("id")
+	if err := database.DB.Preload("Game").Preload("Item").Preload("Payment").Find(&transactions, "user_id = ?", id).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"status":  "error",
+			"message": "transactions not found",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"status":  "success",
+		"message": "transactions found",
+		"data":    transactions,
 	})
 }
